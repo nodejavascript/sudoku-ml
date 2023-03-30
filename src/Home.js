@@ -1,6 +1,6 @@
 import React from 'react'
 
-import AboutApp from './AboutApp'
+import CreatePuzzle from './CreatePuzzle'
 
 import { Card, Space } from 'antd'
 
@@ -15,7 +15,7 @@ const Home = () => {
         style={{ display: 'flex' }}
         size='large'
       >
-        <AboutApp />
+        <CreatePuzzle />
       </Space>
     </Card>
   )
