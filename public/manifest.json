@@ -1,0 +1,25 @@
+{
+  "short_name": "sudoku.nodejavascript.com",
+  "name": "sudoku.nodejavascript.com",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/nodejavascript-com/image/upload/v1680206937/sudoku.nodejavascript.com/sudoku.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "https://res.cloudinary.com/nodejavascript-com/image/upload/v1680206937/sudoku.nodejavascript.com/sudoku.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://res.cloudinary.com/nodejavascript-com/image/upload/v1680206937/sudoku.nodejavascript.com/sudoku.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
