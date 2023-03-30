@@ -1,6 +1,6 @@
 import React from 'react'
 
-import CreatePuzzle from './CreatePuzzle'
+import GameStatus from './GameStatus'
 
 import { Card, Space } from 'antd'
 
@@ -15,7 +15,7 @@ const Home = () => {
         style={{ display: 'flex' }}
         size='large'
       >
-        <CreatePuzzle />
+        <GameStatus />
       </Space>
     </Card>
   )
