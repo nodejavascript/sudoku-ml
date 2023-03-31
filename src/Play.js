@@ -1,26 +1,119 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { gql, useMutation } from '@apollo/client'
+
+import { dateFormatted } from './lib'
+import { updateGameToStorage } from './logic'
 
 import Board from './Board'
 import NumberSelect from './NumberSelect'
+import ShowSolutionButton from './ShowSolutionButton'
 
-import { Card, Button } from 'antd'
+import { Card, Progress, message } from 'antd'
+import { blue, purple } from '@ant-design/colors'
 
-const Play = ({ game, showSolution, setShowSolution }) => {
-  const { puzzleFormatted } = game
+const MUTATION_CHECK_SUDOKU = gql`
+  mutation mutationCheckSudoku ($checkSudokuInput: CheckSudokuInput) {
+    checkSudoku (checkSudokuInput: $checkSudokuInput ) {
+      correct
+      completed
+      percent
+      solved
+      userSubmitted
+      puzzleFormatted {
+        key
+        index
+        column
+        row
+        square
+        display
+      }
+      puzzle
+    }
+  }
+`
 
-  const display = showSolution ? 'Hide solution' : 'Show solution'
+const Play = ({ game, showSolution, setShowSolution, reloadGame }) => {
+  const [mutationCheckSudoku, { error, data }] = useMutation(MUTATION_CHECK_SUDOKU)
+  const [percent, setPercent] = useState()
 
-  const extra = <Button size='small' onClick={() => setShowSolution(!showSolution)}>{display}</Button>
+  useEffect(() => {
+    mutationCheckSudoku({
+      variables: {
+        checkSudokuInput: {
+          puzzle,
+          userSubmitted: false
+        }
+      }
+    })
+  }, [mutationCheckSudoku])
+
+  useEffect(() => {
+    if (!data?.checkSudoku) return
+
+    const { correct, solved, userSubmitted, percent, puzzle, puzzleFormatted } = data.checkSudoku
+
+    if (userSubmitted && !correct) message.error('Incorrect')
+
+    if (userSubmitted && correct) {
+      message.success('Correct!')
+      updateGameToStorage(game.gameId, puzzle, puzzleFormatted)
+      reloadGame()
+    }
+
+    if (userSubmitted && solved) message.success('Solved!')
+
+    percent && setPercent(percent)
+  }, [data, setPercent])
+
+  useEffect(() => {
+    if (error) console.log('mutationCheckSudoku', error)
+  }, [error])
+
+  const { puzzleFormatted, puzzle, createdAt } = game
+
+  const cellClick = (cell, buttonSelected) => {
+    if (!buttonSelected) return
+
+    const { puzzle } = game
+    const { index } = cell
+
+    const value = buttonSelected - 1
+
+    const submit = [...puzzle]
+    submit[index] = value
+
+    mutationCheckSudoku({
+      variables: {
+        checkSudokuInput: {
+          puzzle: submit,
+          userSubmitted: true
+        }
+      }
+    })
+  }
 
   return (
     <Card
       type='inner'
-      title='Puzzle'
-      extra={extra}
+      title={dateFormatted(createdAt)}
+      extra={<ShowSolutionButton showSolution={showSolution} setShowSolution={setShowSolution} />}
     >
-      <Board rows={puzzleFormatted} heightOffset={5} />
 
-      <NumberSelect showSolution={showSolution} setShowSolution={setShowSolution} />
+      {
+        percent &&
+          <Progress
+            percent={percent}
+            status='active'
+            strokeColor={{
+              from: blue[4],
+              to: purple[4]
+            }}
+          />
+      }
+
+      <Board rows={puzzleFormatted} heightOffset={15} cellClick={cellClick} />
+
+      <NumberSelect />
 
     </Card>
   )

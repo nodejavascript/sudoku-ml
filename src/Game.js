@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useReactiveVar } from '@apollo/client'
 
 import { memoryCurrentGame } from './lib'
@@ -12,7 +12,16 @@ import { Space, Alert } from 'antd'
 const Game = () => {
   const [showSolution, setShowSolution] = useState(false)
   const gameId = useReactiveVar(memoryCurrentGame)
-  const game = returnGameFromStorage(gameId)
+
+  const [game, setGame] = useState()
+
+  const reloadGame = () => {
+    setGame(returnGameFromStorage(gameId))
+  }
+
+  useEffect(() => {
+    setGame(returnGameFromStorage(gameId))
+  }, [setGame, gameId])
 
   if (!game) return <Alert message='Load or create a new game' banner />
 
@@ -20,7 +29,7 @@ const Game = () => {
     <Space
       align='top'
     >
-      <Play game={game} showSolution={showSolution} setShowSolution={setShowSolution} />
+      <Play game={game} reloadGame={reloadGame} showSolution={showSolution} setShowSolution={setShowSolution} />
       <Solution showSolution={showSolution} solvedFormatted={game.solvedFormatted} />
 
     </Space>

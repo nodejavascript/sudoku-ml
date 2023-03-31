@@ -1,3 +1,3 @@
 export { getStorageItem, setStorageItem } from './encrypt-storage'
-export { memoryCurrentGame } from './memory'
+export { memoryCurrentGame, memoryButtonSelected, memoryReloadGames } from './memory'
 export { dateFormatted, fromNow } from './dayjs'

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useReactiveVar } from '@apollo/client'
 
-import { memoryCurrentGame, dateFormatted, fromNow } from './lib'
+import { memoryCurrentGame, dateFormatted, fromNow, memoryReloadGames } from './lib'
 import { removeGameFromStorage, returnGamesFromStorage } from './logic'
 
 import { Table, Button, Tag, Popconfirm, Card } from 'antd'
@@ -19,8 +19,10 @@ const DeleteGame = ({ gameId, deleteGame }) => {
     </Popconfirm>
   )
 }
+
 const SavedGamesList = () => {
   const currentGameId = useReactiveVar(memoryCurrentGame)
+  const reloadGames = useReactiveVar(memoryReloadGames)
   const loadGame = gameId => memoryCurrentGame(gameId)
 
   const [games, setGames] = useState(returnGamesFromStorage())
@@ -35,6 +37,13 @@ const SavedGamesList = () => {
     setGames(returnGamesFromStorage())
   }, [currentGameId])
 
+  useEffect(() => {
+    if (reloadGames) {
+      setGames(returnGamesFromStorage())
+      memoryReloadGames(false)
+    }
+  }, [reloadGames, setGames])
+
   const columns = [
     {
       dataIndex: 'createdAt',
@@ -47,6 +56,11 @@ const SavedGamesList = () => {
       render: createdAt => fromNow(createdAt)
     },
     {
+      dataIndex: 'updatedAt',
+      title: 'Updated',
+      render: updatedAt => fromNow(updatedAt)
+    },
+    {
       dataIndex: 'playing',
       title: 'Status',
       render: (value, { gameId }) => gameId === currentGameId && <Tag color='magenta'>Playing...</Tag>
@@ -57,6 +71,9 @@ const SavedGamesList = () => {
       render: gameId => <DeleteGame gameId={gameId} deleteGame={deleteGame} />
     }
   ]
+
+  if (games.length === 0) return null
+
   return (
     <Card
       type='inner'
