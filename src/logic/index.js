@@ -1,14 +1,11 @@
 import { getStorageItem, setStorageItem } from '../lib'
 
-export const returnGames = () => getStorageItem('games') || []
+export const returnGamesFromStorage = () => getStorageItem('games') || []
 
-export const returnGame = gameId => {
-  const games = returnGames()
-  return games.find(i => i.gameId === gameId)
-}
+export const returnGameFromStorage = gameId => getStorageItem(`gameId_${gameId}`)
 
 export const addGameToStorage = game => {
-  const games = returnGames()
+  const games = returnGamesFromStorage()
 
   const { gameId, createdAt } = game
 
@@ -20,7 +17,7 @@ export const addGameToStorage = game => {
 }
 
 export const removeGameFromStorage = gameId => {
-  const games = returnGames()
+  const games = returnGamesFromStorage()
 
   setStorageItem('games', games.filter(i => i.gameId !== gameId))
 
