@@ -37,6 +37,8 @@ const Play = ({ game, showSolution, setShowSolution, reloadGame }) => {
   const [percent, setPercent] = useState()
 
   useEffect(() => {
+    if (!game) return
+    const { puzzle } = game
     mutationCheckSudoku({
       variables: {
         checkSudokuInput: {
@@ -45,9 +47,10 @@ const Play = ({ game, showSolution, setShowSolution, reloadGame }) => {
         }
       }
     })
-  }, [mutationCheckSudoku])
+  }, [mutationCheckSudoku, game])
 
   useEffect(() => {
+    if (!game) return
     if (!data?.checkSudoku) return
 
     const { correct, solved, userSubmitted, percent, puzzle, puzzleFormatted } = data.checkSudoku
@@ -63,13 +66,13 @@ const Play = ({ game, showSolution, setShowSolution, reloadGame }) => {
     if (userSubmitted && solved) message.success('Solved!')
 
     percent && setPercent(percent)
-  }, [data, setPercent])
+  }, [data, setPercent, game, reloadGame])
 
   useEffect(() => {
     if (error) console.log('mutationCheckSudoku', error)
   }, [error])
 
-  const { puzzleFormatted, puzzle, createdAt } = game
+  const { puzzleFormatted, createdAt } = game
 
   const cellClick = (cell, buttonSelected) => {
     if (!buttonSelected) return
