@@ -33,7 +33,6 @@ const MUTATION_NEW_SUDOKU = gql`
 `
 
 const NewGameButton = () => {
-  const createNewGame = () => mutationNewSudoku()
   const [mutationNewSudoku, { error, data }] = useMutation(MUTATION_NEW_SUDOKU)
 
   useEffect(() => {
@@ -57,6 +56,8 @@ const NewGameButton = () => {
     addGameToStorage(newGame)
     memoryCurrentGame(gameId)
   }, [data])
+
+  const createNewGame = () => mutationNewSudoku()
 
   return (
     <Button type='primary' onClick={() => createNewGame()}>New game</Button>

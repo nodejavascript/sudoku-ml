@@ -2,22 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
 
 import { dateFormatted } from './lib'
-import { updateGameToStorage } from './logic'
+import { updateGameToStorage, returnGameFromStorage, returnGameProgress } from './logic'
 
 import Board from './Board'
 import NumberSelect from './NumberSelect'
 import ShowSolutionButton from './ShowSolutionButton'
 
-import { Card, Progress, message } from 'antd'
+import { Card, Progress, message, Alert } from 'antd'
 import { blue, purple } from '@ant-design/colors'
 
 const MUTATION_CHECK_SUDOKU = gql`
   mutation mutationCheckSudoku ($checkSudokuInput: CheckSudokuInput) {
     checkSudoku (checkSudokuInput: $checkSudokuInput ) {
       correct
-      completed
-      percent
-      solved
       userSubmitted
       puzzleFormatted {
         key
@@ -32,13 +29,22 @@ const MUTATION_CHECK_SUDOKU = gql`
   }
 `
 
-const Play = ({ game, showSolution, setShowSolution, reloadGame }) => {
+const Play = ({ gameId, showSolution, setShowSolution }) => {
   const [mutationCheckSudoku, { error, data }] = useMutation(MUTATION_CHECK_SUDOKU)
-  const [percent, setPercent] = useState()
+
+  const [game, setGame] = useState()
+
+  useEffect(() => {
+    if (gameId) {
+      setGame(returnGameFromStorage(gameId))
+    }
+  }, [gameId, setGame])
 
   useEffect(() => {
     if (!game) return
+
     const { puzzle } = game
+
     mutationCheckSudoku({
       variables: {
         checkSudokuInput: {
@@ -47,32 +53,29 @@ const Play = ({ game, showSolution, setShowSolution, reloadGame }) => {
         }
       }
     })
-  }, [mutationCheckSudoku, game])
+  }, [game])
 
   useEffect(() => {
-    if (!game) return
     if (!data?.checkSudoku) return
 
-    const { correct, solved, userSubmitted, percent, puzzle, puzzleFormatted } = data.checkSudoku
+    const { userSubmitted, correct, puzzle, puzzleFormatted } = data.checkSudoku
 
-    if (userSubmitted && !correct) message.error('Incorrect')
-
-    if (userSubmitted && correct) {
-      message.success('Correct!')
-      updateGameToStorage(game.gameId, puzzle, puzzleFormatted)
-      reloadGame()
+    if (userSubmitted) {
+      if (!correct) message.error('Incorrect')
+      if (correct) message.success('Correct')
     }
 
-    if (userSubmitted && solved) message.success('Solved!')
-
-    percent && setPercent(percent)
-  }, [data, setPercent, game, reloadGame])
+    if (userSubmitted && correct) {
+      updateGameToStorage(gameId, puzzle, puzzleFormatted)
+      setGame(returnGameFromStorage(gameId))
+    }
+  }, [gameId, data, setGame])
 
   useEffect(() => {
     if (error) console.log('mutationCheckSudoku', error)
   }, [error])
 
-  const { puzzleFormatted, createdAt } = game
+  if (!game) return <Alert message='Load or create a new game' banner />
 
   const cellClick = (cell, buttonSelected) => {
     if (!buttonSelected) return
@@ -85,7 +88,7 @@ const Play = ({ game, showSolution, setShowSolution, reloadGame }) => {
     const submit = [...puzzle]
     submit[index] = value
 
-    mutationCheckSudoku({
+    return mutationCheckSudoku({
       variables: {
         checkSudokuInput: {
           puzzle: submit,
@@ -95,6 +98,9 @@ const Play = ({ game, showSolution, setShowSolution, reloadGame }) => {
     })
   }
 
+  const { puzzleFormatted, createdAt } = game
+  const { percent, progressType } = returnGameProgress(game)
+
   return (
     <Card
       type='inner'
@@ -102,17 +108,16 @@ const Play = ({ game, showSolution, setShowSolution, reloadGame }) => {
       extra={<ShowSolutionButton showSolution={showSolution} setShowSolution={setShowSolution} />}
     >
 
-      {
-        percent &&
-          <Progress
-            percent={percent}
-            status='active'
-            strokeColor={{
-              from: blue[4],
-              to: purple[4]
-            }}
-          />
-      }
+      <Progress
+        percent={percent}
+        type={progressType}
+        status='active'
+        strokeColor={{
+          from: blue[4],
+          to: purple[4]
+        }}
+        style={{ margin: 5, marginBottom: 20 }}
+      />
 
       <Board rows={puzzleFormatted} heightOffset={15} cellClick={cellClick} />
 

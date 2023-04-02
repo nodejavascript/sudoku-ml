@@ -39,6 +39,11 @@ export const updateGameToStorage = (gameId, puzzle, puzzleFormatted) => {
   setStorageItem('games', games)
   setStorageItem(`gameId_${gameId}`, update)
   memoryReloadGames(true)
+}
 
-  // setStorageItem(`gameId_${gameId}`, game)
+export const returnGameProgress = ({ puzzle }) => {
+  const percent = parseInt(puzzle.filter(i => i !== null).length / puzzle.length * 100)
+  const solved = Boolean(percent === 100)
+  const progressType = solved ? 'circle' : 'line'
+  return { percent, progressType }
 }
