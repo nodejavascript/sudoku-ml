@@ -4,9 +4,9 @@ import { useReactiveVar } from '@apollo/client'
 import { memoryCurrentGame, friendlyDateFormat, memoryReloadGames } from './lib'
 import { removeGameFromStorage, returnGamesFromStorage } from './logic'
 
-import { green } from '@ant-design/colors'
-import { DeleteOutlined } from '@ant-design/icons'
-import { Table, Button, Popconfirm, Alert, Progress, Badge, Space, Row, Typography } from 'antd'
+import { blue, grey } from '@ant-design/colors'
+import { DeleteOutlined, PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons'
+import { Table, Button, Popconfirm, Alert, Progress, Space, Row, Typography } from 'antd'
 
 const { Title } = Typography
 
@@ -19,7 +19,7 @@ const DeleteGame = ({ gameId, deleteGame }) => {
       cancelText='No'
       onConfirm={() => deleteGame(gameId)}
     >
-      <Button type='link'><DeleteOutlined /></Button>
+      <Button type='link' danger><DeleteOutlined /></Button>
     </Popconfirm>
   )
 }
@@ -27,10 +27,12 @@ const DeleteGame = ({ gameId, deleteGame }) => {
 const SaveGamesTitle = ({ games }) => {
   return (
     <Row justify='center'>
-      <Title level={3} style={{ margin: 0 }}>Saved games</Title>
+      <Title level={3} style={{ margin: 0, color: blue[5] }}>Saved games</Title>
     </Row>
   )
 }
+
+const PlayIcon = ({ playing }) => playing ? <PlayCircleTwoTone style={{ fontSize: 24 }} /> : <PlayCircleOutlined style={{ fontSize: 24, color: grey[0], cursor: 'pointer' }} />
 
 const SavedGamesList = () => {
   const currentGameId = useReactiveVar(memoryCurrentGame)
@@ -62,17 +64,31 @@ const SavedGamesList = () => {
     {
       dataIndex: 'game',
       title: 'Game',
-      render: (value, { gameId, createdAt }) => (
-        <Space>
-          {gameId === currentGameId && <Badge color={green[4]} />}
-          <Button style={{ paddingLeft: 0 }} type='link' onClick={() => loadGame(gameId)}>{friendlyDateFormat(createdAt)}</Button>
-        </Space>
-      )
+      render: (value, { gameId, createdAt }) => {
+        return (
+          <Space
+            size='small'
+            onClick={() => loadGame(gameId)}
+          >
+
+            <PlayIcon playing={gameId === currentGameId} />
+
+            <Button
+              size='large'
+              type='link'
+            >
+              {gameId}
+
+            </Button>
+
+          </Space>
+        )
+      }
     },
     {
       dataIndex: 'last',
-      title: 'Last played',
-      render: (value, { updatedAt }) => friendlyDateFormat(updatedAt)
+      title: 'Last activity',
+      render: (value, { createdAt, updatedAt }) => friendlyDateFormat(updatedAt || createdAt)
     },
     {
       dataIndex: 'progress',

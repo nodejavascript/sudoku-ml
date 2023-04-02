@@ -31,7 +31,7 @@ const Board = ({ rows, heightOffset = 0, cellClick }) => {
               marginBottom += 10
             }
 
-            const color = square % 2 ? blue[4] : purple[4]
+            const color = square % 2 ? blue[5] : purple[4]
 
             const isClickable = cellClick && display === null
 

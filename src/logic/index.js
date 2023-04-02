@@ -7,6 +7,7 @@ export const returnGamesFromStorage = () => {
     const { percent, progressType } = returnGameProgress(storedGame)
     game.percent = percent
     game.progressType = progressType
+    return game
   })
   return games
 }

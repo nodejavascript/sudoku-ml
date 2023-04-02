@@ -12,8 +12,7 @@ const Game = () => {
   const [showSolution, setShowSolution] = useState(false)
 
   const gameId = useReactiveVar(memoryCurrentGame)
-  // helps spacing on Home
-  if (!gameId) return null
+  if (!gameId) return null // helps v-spacing on Home
 
   return (
     <Space align='top'>

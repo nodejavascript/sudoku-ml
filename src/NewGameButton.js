@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { gql, useMutation } from '@apollo/client'
-import { v4 as uuidv4 } from 'uuid'
+import humanId from 'human-id'
 
 import { memoryCurrentGame } from './lib'
 import { addGameToStorage } from './logic'
@@ -43,7 +43,7 @@ const NewGameButton = () => {
   useEffect(() => {
     if (!data?.newSudoku) return
 
-    const gameId = uuidv4()
+    const gameId = humanId()
     const createdAt = new Date()
 
     const { newSudoku } = data

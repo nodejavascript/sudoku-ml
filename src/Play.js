@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { gql, useMutation, useReactiveVar } from '@apollo/client'
 
-import { friendlyDateFormat, memoryCurrentGame } from './lib'
+import { memoryCurrentGame } from './lib'
 import { updateGameToStorage, returnGameFromStorage, returnGameProgress } from './logic'
 
 import Board from './Board'
 import NumberSelect from './NumberSelect'
 import ShowSolutionButton from './ShowSolutionButton'
 
-import { Card, Progress, message, Space } from 'antd'
 import { blue, purple } from '@ant-design/colors'
+
+import { Card, Progress, message, Space, Typography } from 'antd'
+
+const { Title } = Typography
 
 const MUTATION_CHECK_SUDOKU = gql`
   mutation mutationCheckSudoku ($checkSudokuInput: CheckSudokuInput) {
@@ -54,7 +57,7 @@ const Play = ({ showSolution, setShowSolution }) => {
         }
       }
     })
-  }, [game])
+  }, [game, mutationCheckSudoku])
 
   useEffect(() => {
     if (!data?.checkSudoku) return
@@ -99,14 +102,13 @@ const Play = ({ showSolution, setShowSolution }) => {
     })
   }
 
-  const { puzzleFormatted, createdAt } = game
+  const { puzzleFormatted } = game
   const { percent, progressType } = returnGameProgress(game)
 
   return (
     <Card
-      title={friendlyDateFormat(createdAt)}
+      title={<Title level={4} style={{ margin: 0, color: blue[5] }}>{gameId}</Title>}
       extra={<ShowSolutionButton showSolution={showSolution} setShowSolution={setShowSolution} />}
-      style={{ textAlign: 'center' }}
     >
 
       <Space
@@ -118,7 +120,7 @@ const Play = ({ showSolution, setShowSolution }) => {
           type={progressType}
           status='active'
           strokeColor={{
-            from: blue[4],
+            from: blue[5],
             to: purple[4]
           }}
         />
