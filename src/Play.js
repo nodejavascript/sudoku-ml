@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
+import { gql, useMutation, useReactiveVar } from '@apollo/client'
 
-import { dateFormatted } from './lib'
+import { friendlyDateFormat, memoryCurrentGame } from './lib'
 import { updateGameToStorage, returnGameFromStorage, returnGameProgress } from './logic'
 
 import Board from './Board'
 import NumberSelect from './NumberSelect'
 import ShowSolutionButton from './ShowSolutionButton'
 
-import { Card, Progress, message } from 'antd'
+import { Card, Progress, message, Space } from 'antd'
 import { blue, purple } from '@ant-design/colors'
 
 const MUTATION_CHECK_SUDOKU = gql`
@@ -29,7 +29,8 @@ const MUTATION_CHECK_SUDOKU = gql`
   }
 `
 
-const Play = ({ gameId, showSolution, setShowSolution }) => {
+const Play = ({ showSolution, setShowSolution }) => {
+  const gameId = useReactiveVar(memoryCurrentGame)
   const [mutationCheckSudoku, { error, data }] = useMutation(MUTATION_CHECK_SUDOKU)
 
   const [game, setGame] = useState()
@@ -103,25 +104,30 @@ const Play = ({ gameId, showSolution, setShowSolution }) => {
 
   return (
     <Card
-      type='inner'
-      title={dateFormatted(createdAt)}
+      title={friendlyDateFormat(createdAt)}
       extra={<ShowSolutionButton showSolution={showSolution} setShowSolution={setShowSolution} />}
+      style={{ textAlign: 'center' }}
     >
 
-      <Progress
-        percent={percent}
-        type={progressType}
-        status='active'
-        strokeColor={{
-          from: blue[4],
-          to: purple[4]
-        }}
-        style={{ margin: 5, marginBottom: 20 }}
-      />
+      <Space
+        direction='vertical'
+      >
 
-      <Board rows={puzzleFormatted} heightOffset={15} cellClick={cellClick} />
+        <Progress
+          percent={percent}
+          type={progressType}
+          status='active'
+          strokeColor={{
+            from: blue[4],
+            to: purple[4]
+          }}
+        />
 
-      <NumberSelect />
+        <NumberSelect />
+
+        <Board rows={puzzleFormatted} heightOffset={15} cellClick={cellClick} />
+
+      </Space>
 
     </Card>
   )

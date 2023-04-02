@@ -1,13 +1,17 @@
 import React from 'react'
-import Expand from 'react-expand-animated'
+import { useReactiveVar } from '@apollo/client'
+
+import { memoryCurrentGame } from './lib'
 
 import { returnGameFromStorage } from './logic'
 
 import Board from './Board'
 
 import { Card } from 'antd'
+import Expand from 'react-expand-animated'
 
-const Solution = ({ gameId, showSolution }) => {
+const Solution = ({ showSolution }) => {
+  const gameId = useReactiveVar(memoryCurrentGame)
   if (!gameId) return null
 
   const { solvedFormatted } = returnGameFromStorage(gameId)

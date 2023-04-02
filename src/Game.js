@@ -10,16 +10,17 @@ import { Space } from 'antd'
 
 const Game = () => {
   const [showSolution, setShowSolution] = useState(false)
-  const gameId = useReactiveVar(memoryCurrentGame)
 
+  const gameId = useReactiveVar(memoryCurrentGame)
+  // helps spacing on Home
   if (!gameId) return null
 
   return (
     <Space align='top'>
 
-      <Play gameId={gameId} showSolution={showSolution} setShowSolution={setShowSolution} />
+      <Play showSolution={showSolution} setShowSolution={setShowSolution} />
 
-      <Solution gameId={gameId} showSolution={showSolution} />
+      <Solution showSolution={showSolution} />
 
     </Space>
   )

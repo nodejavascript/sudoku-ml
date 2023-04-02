@@ -15,6 +15,7 @@ const Home = () => {
       size='large'
       style={{ margin: 6 }}
     >
+
       <Title level={2} style={{ margin: 0 }}>SUDOKU</Title>
 
       <Game />

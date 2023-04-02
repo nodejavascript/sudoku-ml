@@ -6,6 +6,7 @@ import { memoryCurrentGame } from './lib'
 import { addGameToStorage } from './logic'
 
 import { Button } from 'antd'
+import { PlusCircleOutlined } from '@ant-design/icons'
 
 const MUTATION_NEW_SUDOKU = gql`
   mutation mutationNewSudoku {
@@ -60,7 +61,12 @@ const NewGameButton = () => {
   const createNewGame = () => mutationNewSudoku()
 
   return (
-    <Button type='primary' onClick={() => createNewGame()}>New game</Button>
+    <Button
+      icon={<PlusCircleOutlined />}
+      onClick={() => createNewGame()}
+    >
+      New game
+    </Button>
   )
 }
 

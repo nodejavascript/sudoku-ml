@@ -10,8 +10,7 @@ const NumberSelect = () => {
 
   return (
     <Space
-      size='large'
-      style={{ margin: 5 }}
+      size='small'
     >
       {
         [...Array(9).keys()].map(i => {
@@ -24,6 +23,7 @@ const NumberSelect = () => {
             <Button
               key={`button_${i}`}
               type={type}
+              shape='circle'
               onClick={() => memoryButtonSelected(display)}
             >
               {display}
