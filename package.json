@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@ant-design/colors": "^7.0.0",
+    "@ant-design/icons": "^5.0.1",
     "@ant-design/plots": "^1.2.5",
     "@apollo/client": "^3.7.4",
     "@scaleway/use-query-params": "^4.0.4",

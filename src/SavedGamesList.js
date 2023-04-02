@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useReactiveVar } from '@apollo/client'
 
-import { memoryCurrentGame, dateFormatted, fromNow, memoryReloadGames } from './lib'
+import { memoryCurrentGame, friendlyDateFormat, memoryReloadGames } from './lib'
 import { removeGameFromStorage, returnGamesFromStorage } from './logic'
 
-import { Table, Button, Tag, Popconfirm, Card } from 'antd'
+import { green } from '@ant-design/colors'
+import { DeleteOutlined } from '@ant-design/icons'
+import { Table, Button, Popconfirm, Alert, Progress, Badge, Space, Row, Typography } from 'antd'
+
+const { Title } = Typography
 
 const DeleteGame = ({ gameId, deleteGame }) => {
   return (
@@ -15,8 +19,16 @@ const DeleteGame = ({ gameId, deleteGame }) => {
       cancelText='No'
       onConfirm={() => deleteGame(gameId)}
     >
-      <Button type='link' danger>X</Button>
+      <Button type='link'><DeleteOutlined /></Button>
     </Popconfirm>
+  )
+}
+
+const SaveGamesTitle = ({ games }) => {
+  return (
+    <Row justify='center'>
+      <Title level={3} style={{ margin: 0 }}>Saved games</Title>
+    </Row>
   )
 }
 
@@ -44,26 +56,28 @@ const SavedGamesList = () => {
     }
   }, [reloadGames, setGames])
 
+  if (games.length === 0) return <Alert message='You have no saved games in local storage' banner />
+
   const columns = [
     {
-      dataIndex: 'createdAt',
+      dataIndex: 'game',
       title: 'Game',
-      render: (value, { gameId, createdAt }) => <Button type='link' onClick={() => loadGame(gameId)}>{dateFormatted(createdAt)}</Button>
+      render: (value, { gameId, createdAt }) => (
+        <Space>
+          {gameId === currentGameId && <Badge color={green[4]} />}
+          <Button style={{ paddingLeft: 0 }} type='link' onClick={() => loadGame(gameId)}>{friendlyDateFormat(createdAt)}</Button>
+        </Space>
+      )
     },
     {
-      dataIndex: 'createdAt',
-      title: 'Created',
-      render: createdAt => fromNow(createdAt)
+      dataIndex: 'last',
+      title: 'Last played',
+      render: (value, { updatedAt }) => friendlyDateFormat(updatedAt)
     },
     {
-      dataIndex: 'updatedAt',
-      title: 'Updated',
-      render: updatedAt => fromNow(updatedAt)
-    },
-    {
-      dataIndex: 'playing',
-      title: 'Status',
-      render: (value, { gameId }) => gameId === currentGameId && <Tag color='magenta'>Playing...</Tag>
+      dataIndex: 'progress',
+      title: 'Progress',
+      render: (value, { percent }) => <Progress steps={5} status='active' percent={percent} />
     },
     {
       dataIndex: 'gameId',
@@ -72,20 +86,16 @@ const SavedGamesList = () => {
     }
   ]
 
-  if (games.length === 0) return null
-
   return (
-    <Card
-      type='inner'
-      title='Saved games'
-    >
-      <Table
-        size='small'
-        columns={columns}
-        dataSource={games}
-        pagination={false}
-      />
-    </Card>
+    <Table
+      title={() => <SaveGamesTitle games={games} />}
+      size='small'
+      columns={columns}
+      dataSource={games}
+      pagination={false}
+      showHeader
+      bordered
+    />
   )
 }
 

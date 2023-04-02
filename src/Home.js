@@ -4,24 +4,25 @@ import NewGameButton from './NewGameButton'
 import Game from './Game'
 import SavedGamesList from './SavedGamesList'
 
-import { Card, Space } from 'antd'
+import { Space, Typography } from 'antd'
+
+const { Title } = Typography
 
 const Home = () => {
   return (
-    <Card
-      type='inner'
-      title='Sudoku'
-      extra={<NewGameButton />}
+    <Space
+      direction='vertical'
+      size='large'
+      style={{ margin: 6 }}
     >
-      <Space
-        direction='vertical'
-        style={{ display: 'flex' }}
-        size='large'
-      >
-        <Game />
-        <SavedGamesList />
-      </Space>
-    </Card>
+      <Title level={2} style={{ margin: 0 }}>SUDOKU</Title>
+
+      <Game />
+
+      <NewGameButton />
+
+      <SavedGamesList />
+    </Space>
   )
 }
 

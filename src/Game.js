@@ -12,11 +12,13 @@ const Game = () => {
   const [showSolution, setShowSolution] = useState(false)
   const gameId = useReactiveVar(memoryCurrentGame)
 
+  if (!gameId) return null
+
   return (
-    <Space
-      align='top'
-    >
+    <Space align='top'>
+
       <Play gameId={gameId} showSolution={showSolution} setShowSolution={setShowSolution} />
+
       <Solution gameId={gameId} showSolution={showSolution} />
 
     </Space>

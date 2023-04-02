@@ -1,6 +1,15 @@
 import { getStorageItem, setStorageItem, memoryReloadGames } from '../lib'
 
-export const returnGamesFromStorage = () => getStorageItem('games') || []
+export const returnGamesFromStorage = () => {
+  const games = getStorageItem('games') || []
+  games.map(game => {
+    const storedGame = returnGameFromStorage(game.gameId)
+    const { percent, progressType } = returnGameProgress(storedGame)
+    game.percent = percent
+    game.progressType = progressType
+  })
+  return games
+}
 
 export const returnGameFromStorage = gameId => getStorageItem(`gameId_${gameId}`)
 

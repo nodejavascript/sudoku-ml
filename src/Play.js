@@ -8,7 +8,7 @@ import Board from './Board'
 import NumberSelect from './NumberSelect'
 import ShowSolutionButton from './ShowSolutionButton'
 
-import { Card, Progress, message, Alert } from 'antd'
+import { Card, Progress, message } from 'antd'
 import { blue, purple } from '@ant-design/colors'
 
 const MUTATION_CHECK_SUDOKU = gql`
@@ -75,7 +75,7 @@ const Play = ({ gameId, showSolution, setShowSolution }) => {
     if (error) console.log('mutationCheckSudoku', error)
   }, [error])
 
-  if (!game) return <Alert message='Load or create a new game' banner />
+  if (!game) return null
 
   const cellClick = (cell, buttonSelected) => {
     if (!buttonSelected) return
