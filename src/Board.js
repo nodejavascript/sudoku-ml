@@ -3,67 +3,68 @@ import { useReactiveVar } from '@apollo/client'
 
 import { memoryButtonSelected } from './lib'
 
-import { Row, Col, Tooltip } from 'antd'
+import { Row, Col } from 'antd'
 import { blue, purple } from '@ant-design/colors'
 
-const Board = ({ hide, rows, heightOffset = 0, cellClick }) => {
+const Board = ({ gameId, rows, heightOffset = 0, cellClick }) => {
   const buttonSelected = useReactiveVar(memoryButtonSelected)
-  console.log('rows', rows)
+
+  // if (!buttonSelected) return 'Oops! select a button to see board'
+
   return rows.map((row, rowIndex) => {
     return (
       <Row
         key={`row_${rowIndex}`}
-        justify='space-between'
+        justify='center'
+        wrap={false}
       >
         {
-          row.map(cell => {
-            const { key, display, square } = cell
+          row.map((cell, cellIndex) => {
+            const { key: cellKey, display, square } = cell
 
-            let marginRight = 5
+            const marginBottom = [2, 5].includes(rowIndex) ? 12 : 1
+            const marginRight = [2, 5].includes(cellIndex) ? 12 : 1
 
-            if ([2, 5].includes(key)) {
-              marginRight += 10
-            }
+            const colorArray = square % 2 ? blue : purple
 
-            let marginBottom = 5
-
-            if ([2, 5].includes(rowIndex)) {
-              marginBottom += 10
-            }
-
-            const color = square % 2 ? blue[5] : purple[4]
-
-            const isClickable = cellClick && display === null
+            const isAnswered = display !== null
+            const isPuzzle = Boolean(cellClick)
+            const isClickable = isPuzzle && !isAnswered
 
             const cursor = isClickable && 'pointer'
-            const tip = isClickable && !buttonSelected && 'Select a number button'
+
+            const backgroundColor = isAnswered && colorArray[1]
+
+            const style = {
+              // width: 30,
+              // height: 30 + heightOffset,
+              // marginLeft: 5,
+              padding: 6,
+              margin: 1,
+              marginRight,
+              marginBottom,
+              // paddingLeft: 5,
+              // paddingRight: 5,
+              // paddingTop: 3 + heightOffset / 2,
+              textAlign: 'center',
+              borderRadius: 2,
+              border: `1px solid ${colorArray[5]}`,
+
+              backgroundColor,
+              cursor
+            }
+
+            const key = `${gameId}_${isPuzzle ? 'puzzle' : 'solution'}_${cellKey}`
 
             return (
-              <Tooltip
+              <Col
                 key={key}
-                placement='top'
-                title={tip}
+                span={2}
+                onClick={() => isClickable && cellClick(cell, buttonSelected)}
+                style={style}
               >
-                <Col
-                  flex={1}
-                  onClick={() => isClickable && cellClick(cell, buttonSelected)}
-                  style={{
-                    border: `1px solid ${color}`,
-                    width: 30,
-                    height: 30 + heightOffset,
-                    marginLeft: 5,
-                    marginRight,
-                    marginBottom,
-                    paddingLeft: 5,
-                    paddingRight: 5,
-                    paddingTop: 3 + heightOffset / 2,
-                    textAlign: 'center',
-                    cursor
-                  }}
-                >
-                  {display}
-                </Col>
-              </Tooltip>
+                {display}
+              </Col>
             )
           })
         }

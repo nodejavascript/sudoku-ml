@@ -11,7 +11,7 @@ import ShowSolutionButton from './ShowSolutionButton'
 
 import { blue, purple } from '@ant-design/colors'
 
-import { Row, Col, Progress, message, Typography, Space } from 'antd'
+import { Row, Col, Progress, message, Typography, Space, Card } from 'antd'
 
 const { Title } = Typography
 
@@ -26,6 +26,8 @@ const MUTATION_CHECK_SUDOKU = gql`
         column
         row
         square
+        squareRowIndex
+        squareColIndex
         display
       }
       puzzle
@@ -93,7 +95,7 @@ const Play = ({ showSolution, setShowSolution }) => {
   if (!game) return null
 
   const cellClick = (cell, buttonSelected) => {
-    if (!buttonSelected) return
+    if (!buttonSelected) return message.warning('Select a number to place there')
 
     const { puzzle } = game
     const { index } = cell
@@ -117,33 +119,45 @@ const Play = ({ showSolution, setShowSolution }) => {
   const { percent, progressType } = returnGameProgress(game)
 
   return (
-    <Space direction='vertical' style={{ display: 'flex' }}>
-      <Row
-        justify='space-between'
+    <Card
+      type='inner'
+      title={(
+        <Row
+          justify='space-between'
+        >
+          <Col>
+            <Title level={4} style={{ margin: 0, color: blue[5] }}>{gameId}</Title>
+          </Col>
+          <Col>
+            <ShowSolutionButton showSolution={showSolution} setShowSolution={setShowSolution} />
+          </Col>
+        </Row>
+      )}
+    >
+
+      <Space
+        direction='vertical'
+        size='large'
+        style={{ display: 'flex' }}
       >
-        <Col>
-          <Title level={4} style={{ margin: 0, color: blue[5] }}>{gameId}</Title>
-        </Col>
-        <Col>
-          <ShowSolutionButton showSolution={showSolution} setShowSolution={setShowSolution} />
-        </Col>
-      </Row>
 
-      <Progress
-        percent={percent}
-        type={progressType}
-        status='active'
-        strokeColor={{
-          from: blue[5],
-          to: purple[4]
-        }}
-      />
+        <NumberSelect />
 
-      <NumberSelect />
+        <Board gameId={gameId} rows={puzzleFormatted} heightOffset={15} cellClick={cellClick} />
 
-      <Board rows={puzzleFormatted} heightOffset={15} cellClick={cellClick} />
+        <Progress
+          percent={percent}
+          type={progressType}
+          status='active'
+          strokeColor={{
+            from: blue[5],
+            to: purple[4]
+          }}
+        />
 
-    </Space>
+      </Space>
+
+    </Card>
   )
 }
 

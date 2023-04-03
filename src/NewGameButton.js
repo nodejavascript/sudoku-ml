@@ -18,6 +18,8 @@ const MUTATION_NEW_SUDOKU = gql`
         column
         row
         square
+        squareRowIndex
+        squareColIndex
         display
       },
       solvedFormatted {
@@ -26,6 +28,8 @@ const MUTATION_NEW_SUDOKU = gql`
         column
         row
         square
+        squareRowIndex
+        squareColIndex
         display
       },
       puzzle,

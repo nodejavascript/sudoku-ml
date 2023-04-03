@@ -43,7 +43,6 @@ const NumberSelect = () => {
             >
               <Button
                 type={type}
-                shape='circle'
                 onClick={() => numberSelect(display)}
               >
                 {display}
