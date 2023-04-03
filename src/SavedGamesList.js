@@ -4,7 +4,7 @@ import { useReactiveVar } from '@apollo/client'
 import { memoryCurrentGame, friendlyDateFormat, memoryReloadGames } from './lib'
 import { removeGameFromStorage, returnGamesFromStorage } from './logic'
 
-import { blue, grey } from '@ant-design/colors'
+import { grey } from '@ant-design/colors'
 import { DeleteOutlined, PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons'
 import { Table, Button, Popconfirm, Alert, Progress, Space, Row, Typography } from 'antd'
 
@@ -27,7 +27,7 @@ const DeleteGame = ({ gameId, deleteGame }) => {
 const SaveGamesTitle = ({ games }) => {
   return (
     <Row justify='center'>
-      <Title level={3} style={{ margin: 0, color: blue[5] }}>Saved games</Title>
+      <Title level={4} style={{ margin: 0, color: grey[2] }}>SAVED GAMES</Title>
     </Row>
   )
 }
