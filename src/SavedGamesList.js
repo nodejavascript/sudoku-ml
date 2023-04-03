@@ -5,7 +5,7 @@ import ReactGA from 'react-ga4'
 import { memoryCurrentGame, friendlyDateFormat, memoryReloadGames } from './lib'
 import { removeGameFromStorage, returnGamesFromStorage } from './logic'
 
-import { grey } from '@ant-design/colors'
+import { grey, green } from '@ant-design/colors'
 import { DeleteOutlined, PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons'
 import { Table, Button, Popconfirm, Alert, Progress, Row, Col, Typography } from 'antd'
 
@@ -101,15 +101,14 @@ const SavedGamesList = () => {
             </Col>
 
             <Col flex='auto' style={{ margin: 10 }}>
-              <Row justify='space-between'>
+              <Row justify='space-between' align='middle'>
                 <Col>
                   <Button size='large' type='link' style={{ paddingLeft: 0 }}>
                     {gameId}
                   </Button>
                 </Col>
                 <Col>
-                  <Progress size='small' steps={5} status='active' percent={percent} />
-
+                  <Progress size='small' steps={5} status='active' percent={percent} strokeColor={green[6]} />
                 </Col>
               </Row>
             </Col>

@@ -14,11 +14,8 @@ const Game = () => {
 
   return (
     <>
-
-      <Play showSolution={showSolution} setShowSolution={setShowSolution} />
-
       <Solution showSolution={showSolution} />
-
+      <Play showSolution={showSolution} setShowSolution={setShowSolution} />
     </>
   )
 }

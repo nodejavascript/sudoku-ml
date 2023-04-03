@@ -11,7 +11,7 @@ import ShowSolutionButton from './ShowSolutionButton'
 
 import { blue, purple } from '@ant-design/colors'
 
-import { Row, Col, Progress, message, Typography } from 'antd'
+import { Row, Col, Progress, message, Typography, Space } from 'antd'
 
 const { Title } = Typography
 
@@ -117,7 +117,7 @@ const Play = ({ showSolution, setShowSolution }) => {
   const { percent, progressType } = returnGameProgress(game)
 
   return (
-    <>
+    <Space direction='vertical' style={{ display: 'flex' }}>
       <Row
         justify='space-between'
       >
@@ -143,7 +143,7 @@ const Play = ({ showSolution, setShowSolution }) => {
 
       <Board rows={puzzleFormatted} heightOffset={15} cellClick={cellClick} />
 
-    </>
+    </Space>
   )
 }
 

@@ -6,9 +6,9 @@ import { memoryButtonSelected } from './lib'
 import { Row, Col, Tooltip } from 'antd'
 import { blue, purple } from '@ant-design/colors'
 
-const Board = ({ rows, heightOffset = 0, cellClick }) => {
+const Board = ({ hide, rows, heightOffset = 0, cellClick }) => {
   const buttonSelected = useReactiveVar(memoryButtonSelected)
-
+  console.log('rows', rows)
   return rows.map((row, rowIndex) => {
     return (
       <Row
