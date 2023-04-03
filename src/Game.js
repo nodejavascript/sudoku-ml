@@ -6,6 +6,8 @@ import { memoryCurrentGame } from './lib'
 import Play from './Play'
 import Solution from './Solution'
 
+import { Space } from 'antd'
+
 const Game = () => {
   const [showSolution, setShowSolution] = useState(false)
   const gameId = useReactiveVar(memoryCurrentGame)
@@ -13,10 +15,13 @@ const Game = () => {
   if (!gameId) return null // helps v-spacing on Home
 
   return (
-    <>
-      <Solution showSolution={showSolution} />
+    <Space
+      direction='vertical'
+      style={{ display: 'flex' }}
+    >
+      <Solution showSolution={showSolution} setShowSolution={setShowSolution} />
       <Play showSolution={showSolution} setShowSolution={setShowSolution} />
-    </>
+    </Space>
   )
 }
 

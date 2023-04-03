@@ -23,12 +23,13 @@ const NumberSelect = () => {
       memoryButtonSelected(display)
     }
   }
-
+  
   return (
     <Row
       size='small'
       align='middle'
       justify='space-between'
+      style={{ marginBottom: 6 }}
     >
       {
         [...Array(9).keys()].map(i => {
@@ -43,6 +44,7 @@ const NumberSelect = () => {
             >
               <Button
                 type={type}
+                size='small'
                 onClick={() => numberSelect(display)}
               >
                 {display}

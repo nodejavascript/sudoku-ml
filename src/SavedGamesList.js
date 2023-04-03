@@ -103,7 +103,7 @@ const SavedGamesList = () => {
             <Col flex='auto' style={{ margin: 10 }}>
               <Row justify='space-between' align='middle'>
                 <Col>
-                  <Button size='large' type='link' style={{ paddingLeft: 0 }}>
+                  <Button type='link' style={{ paddingLeft: 0 }}>
                     {gameId}
                   </Button>
                 </Col>

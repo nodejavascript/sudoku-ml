@@ -8,10 +8,10 @@ import { returnGameFromStorage } from './logic'
 
 import Board from './Board'
 
-import { Card } from 'antd'
+import { Card, Modal } from 'antd'
 import Expand from 'react-expand-animated'
 
-const Solution = ({ showSolution }) => {
+const Solution = ({ showSolution, setShowSolution }) => {
   const gameId = useReactiveVar(memoryCurrentGame)
 
   useEffect(() => {
@@ -31,14 +31,15 @@ const Solution = ({ showSolution }) => {
   const { solvedFormatted } = returnGameFromStorage(gameId)
 
   return (
-    <Expand open={showSolution} easing='ease-in'>
-      <Card
-        type='inner'
-        title='Solution'
-      >
-        <Board rows={solvedFormatted} />
-      </Card>
-    </Expand>
+    <Modal
+      style={{ top: 1 }}
+      title='Cheater!'
+      open={showSolution}
+      onCancel={() => setShowSolution(false)}
+      footer={null}
+    >
+      <Board key={`solution_${gameId}`} rows={solvedFormatted} />
+    </Modal>
   )
 }
 

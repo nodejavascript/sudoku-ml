@@ -133,18 +133,13 @@ const Play = ({ showSolution, setShowSolution }) => {
           </Col>
         </Row>
       )}
+      style={{ padding: 0, margin: 0 }}
     >
 
       <Space
         direction='vertical'
-        size='large'
         style={{ display: 'flex' }}
       >
-
-        <NumberSelect />
-
-        <Board gameId={gameId} rows={puzzleFormatted} heightOffset={15} cellClick={cellClick} />
-
         <Progress
           percent={percent}
           type={progressType}
@@ -154,6 +149,10 @@ const Play = ({ showSolution, setShowSolution }) => {
             to: purple[4]
           }}
         />
+
+        <NumberSelect />
+
+        <Board key={`game_${gameId}`} gameId={gameId} rows={puzzleFormatted} heightOffset={15} cellClick={cellClick} />
 
       </Space>
 
