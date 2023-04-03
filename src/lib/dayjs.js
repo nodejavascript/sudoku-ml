@@ -17,7 +17,7 @@ export const timeFormatted = date => dayjs(date).format('LT')
 export const friendlyDateFormat = date => {
   if (!date) return '-'
 
-  if (dayjs(date).isToday(date)) return `Today, about ${dayjs(date).fromNow()}`
+  if (dayjs(date).isToday(date)) return `Today, ${dayjs(date).fromNow()}`
 
   if (dayjs(date).isYesterday(date)) return `Yesterday at ${timeFormatted(date)}`
 

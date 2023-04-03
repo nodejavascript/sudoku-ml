@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useReactiveVar } from '@apollo/client'
+import ReactGA from 'react-ga4'
 
 import { memoryCurrentGame, friendlyDateFormat, memoryReloadGames } from './lib'
 import { removeGameFromStorage, returnGamesFromStorage } from './logic'
 
 import { grey } from '@ant-design/colors'
 import { DeleteOutlined, PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons'
-import { Table, Button, Popconfirm, Alert, Progress, Space, Row, Typography } from 'antd'
+import { Table, Button, Popconfirm, Alert, Progress, Row, Col, Typography } from 'antd'
 
 const { Title } = Typography
 
@@ -37,11 +38,34 @@ const PlayIcon = ({ playing }) => playing ? <PlayCircleTwoTone style={{ fontSize
 const SavedGamesList = () => {
   const currentGameId = useReactiveVar(memoryCurrentGame)
   const reloadGames = useReactiveVar(memoryReloadGames)
-  const loadGame = gameId => memoryCurrentGame(gameId)
+
+  const loadGame = gameId => {
+    const category = 'Game'
+    const action = 'loadGame'
+    const label = gameId
+
+    ReactGA.event({
+      category,
+      action,
+      label
+    })
+
+    return memoryCurrentGame(gameId)
+  }
 
   const [games, setGames] = useState(returnGamesFromStorage())
 
   const deleteGame = gameId => {
+    const category = 'Game'
+    const action = 'deleteGame'
+    const label = gameId
+
+    ReactGA.event({
+      category,
+      action,
+      label
+    })
+
     removeGameFromStorage(gameId)
     if (currentGameId === gameId) memoryCurrentGame(false)
     setGames(returnGamesFromStorage())
@@ -64,24 +88,33 @@ const SavedGamesList = () => {
     {
       dataIndex: 'game',
       title: 'Game',
-      render: (value, { gameId, createdAt }) => {
+      render: (value, { gameId, createdAt, percent }) => {
         return (
-          <Space
-            size='small'
+          <Row
+            align='middle'
             onClick={() => loadGame(gameId)}
+            wrap={false}
           >
 
-            <PlayIcon playing={gameId === currentGameId} />
+            <Col>
+              <PlayIcon playing={gameId === currentGameId} />
+            </Col>
 
-            <Button
-              size='large'
-              type='link'
-            >
-              {gameId}
+            <Col flex='auto' style={{ margin: 10 }}>
+              <Row justify='space-between'>
+                <Col>
+                  <Button size='large' type='link' style={{ paddingLeft: 0 }}>
+                    {gameId}
+                  </Button>
+                </Col>
+                <Col>
+                  <Progress size='small' steps={5} status='active' percent={percent} />
 
-            </Button>
+                </Col>
+              </Row>
+            </Col>
 
-          </Space>
+          </Row>
         )
       }
     },
@@ -90,11 +123,7 @@ const SavedGamesList = () => {
       title: 'Last activity',
       render: (value, { createdAt, updatedAt }) => friendlyDateFormat(updatedAt || createdAt)
     },
-    {
-      dataIndex: 'progress',
-      title: 'Progress',
-      render: (value, { percent }) => <Progress steps={5} status='active' percent={percent} />
-    },
+
     {
       dataIndex: 'gameId',
       title: 'Delete',

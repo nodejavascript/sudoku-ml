@@ -1,16 +1,34 @@
 import React from 'react'
 import { useReactiveVar } from '@apollo/client'
+import ReactGA from 'react-ga4'
 
 import { memoryButtonSelected } from './lib'
 
-import { Space, Button } from 'antd'
+import { Row, Col, Button } from 'antd'
 
 const NumberSelect = () => {
   const buttonSelected = useReactiveVar(memoryButtonSelected)
 
+  const numberSelect = display => {
+    if (memoryButtonSelected() !== display) { // a different button click
+      const category = 'UI'
+      const action = 'NumberSelect'
+      const value = display
+
+      ReactGA.event({
+        category,
+        action,
+        value
+      })
+      memoryButtonSelected(display)
+    }
+  }
+
   return (
-    <Space
+    <Row
       size='small'
+      align='middle'
+      justify='space-between'
     >
       {
         [...Array(9).keys()].map(i => {
@@ -20,18 +38,21 @@ const NumberSelect = () => {
           if (display === buttonSelected) type = 'primary'
 
           return (
-            <Button
+            <Col
               key={`button_${i}`}
-              type={type}
-              shape='circle'
-              onClick={() => memoryButtonSelected(display)}
             >
-              {display}
-            </Button>
+              <Button
+                type={type}
+                shape='circle'
+                onClick={() => numberSelect(display)}
+              >
+                {display}
+              </Button>
+            </Col>
           )
         })
       }
-    </Space>
+    </Row>
   )
 }
 

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { gql, useMutation } from '@apollo/client'
 import humanId from 'human-id'
+import ReactGA from 'react-ga4'
 
 import { memoryCurrentGame } from './lib'
 import { addGameToStorage } from './logic'
@@ -45,6 +46,16 @@ const NewGameButton = () => {
 
     const gameId = humanId()
     const createdAt = new Date()
+
+    const category = 'Game'
+    const action = 'NewGameButton'
+    const label = gameId
+
+    ReactGA.event({
+      category,
+      action,
+      label
+    })
 
     const { newSudoku } = data
 

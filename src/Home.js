@@ -16,7 +16,7 @@ const Home = () => {
       style={{ margin: 6 }}
     >
 
-      <Title level={2} style={{ margin: 0 }}>SUDOKU</Title>
+      <Title level={2} style={{ margin: 0 }}>SUDOKU-ML</Title>
 
       <Game />
 

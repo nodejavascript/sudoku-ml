@@ -1,6 +1,6 @@
 {
-  "short_name": "sudoku.nodejavascript.com",
-  "name": "sudoku.nodejavascript.com",
+  "short_name": "sudoku-ml",
+  "name": "sudoku-ml.nodejavascript.com",
   "icons": [
     {
       "src": "https://res.cloudinary.com/nodejavascript-com/image/upload/v1680206937/sudoku.nodejavascript.com/sudoku.png",
