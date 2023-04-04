@@ -5,10 +5,10 @@ import { memoryButtonSelected } from './lib'
 import { returnGameFromStorage } from './logic'
 
 import { Row, Col } from 'antd'
-import { blue, purple } from '@ant-design/colors'
+import { blue, purple, grey } from '@ant-design/colors'
 
 const Board = ({ gameId, rows, cellClick }) => {
-  const { originalPuzzleFormatted } = returnGameFromStorage(gameId)
+  const { originalPuzzleFormatted, hints } = returnGameFromStorage(gameId)
 
   const buttonSelected = useReactiveVar(memoryButtonSelected)
 
@@ -33,10 +33,27 @@ const Board = ({ gameId, rows, cellClick }) => {
             const isAnswered = display !== null
             const isClickable = isPuzzle && !isAnswered
 
-            const isOriginal = Boolean(originalPuzzleFormatted[rowIndex].find(i => i.key === cellKey).display !== null)
+            const isOriginal = Boolean(isPuzzle && originalPuzzleFormatted[rowIndex].find(i => i.key === cellKey).display !== null)
 
             const colorArray = square % 2 ? blue : purple
-            const backgroundColor = isAnswered && colorArray[isOriginal ? 3 : 2]
+
+            let backgroundColor = isAnswered && colorArray[isOriginal ? 3 : 2]
+
+            if (isPuzzle && !backgroundColor && buttonSelected) {
+              const { rows: matchRows, columns: matchColumns, squares: matchSquares } = hints.find(i => i.display === buttonSelected)
+
+              const cellFound = Boolean(matchRows.find(i => i === cell.row) || matchColumns.find(i => i === cell.column) || matchSquares.find(i => i === cell.square))
+
+              console.log('\n')
+              console.log('buttonSelected', buttonSelected)
+              console.log('cell.row', cell.row)
+              console.log('cell.column', cell.column)
+              console.log('matchRows', matchRows)
+              console.log('matchColumns', matchColumns)
+              console.log('cellFound', cellFound)
+
+              backgroundColor = cellFound && grey[0]
+            }
 
             const cursor = isClickable && 'pointer'
 

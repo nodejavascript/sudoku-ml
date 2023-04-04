@@ -38,7 +38,7 @@ const Solution = ({ showSolution, setShowSolution }) => {
       onCancel={() => setShowSolution(false)}
       footer={null}
     >
-      <Board key={`solution_${gameId}`} rows={solvedFormatted} />
+      <Board key={`solution_${gameId}`} gameId={gameId} rows={solvedFormatted} />
     </Modal>
   )
 }

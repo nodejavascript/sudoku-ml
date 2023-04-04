@@ -34,7 +34,7 @@ export const removeGameFromStorage = gameId => {
   setStorageItem(`gameId_${gameId}`)
 }
 
-export const updateGameToStorage = (gameId, puzzle, puzzleFormatted) => {
+export const updateGameToStorage = (gameId, puzzle, puzzleFormatted, hints) => {
   const updatedAt = new Date()
 
   const storedGame = returnGameFromStorage(gameId)
@@ -42,9 +42,9 @@ export const updateGameToStorage = (gameId, puzzle, puzzleFormatted) => {
   const games = returnGamesFromStorage()
   const gamesIndex = games.findIndex(i => i.key === gameId)
 
-  games[gamesIndex] = { ...games[gamesIndex], puzzle, puzzleFormatted, updatedAt }
+  games[gamesIndex] = { ...games[gamesIndex], puzzle, puzzleFormatted, hints, updatedAt }
 
-  const update = { ...storedGame, puzzle, puzzleFormatted, updatedAt }
+  const update = { ...storedGame, puzzle, puzzleFormatted, hints, updatedAt }
 
   setStorageItem('games', games)
   setStorageItem(`gameId_${gameId}`, update)

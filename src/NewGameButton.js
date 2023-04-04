@@ -21,7 +21,7 @@ const MUTATION_NEW_SUDOKU = gql`
         squareRowIndex
         squareColIndex
         display
-      },
+      }
       solvedFormatted {
         key
         index
@@ -31,9 +31,15 @@ const MUTATION_NEW_SUDOKU = gql`
         squareRowIndex
         squareColIndex
         display
-      },
-      puzzle,
+      }
+      puzzle
       solved
+      hints {
+        display
+        rows
+        columns
+        squares
+      }
     }
   }
 `

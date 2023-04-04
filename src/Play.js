@@ -31,6 +31,12 @@ const MUTATION_CHECK_SUDOKU = gql`
         display
       }
       puzzle
+      hints {
+        display
+        rows
+        columns
+        squares
+      }
     }
   }
 `
@@ -65,7 +71,7 @@ const Play = ({ showSolution, setShowSolution }) => {
   useEffect(() => {
     if (!data?.checkSudoku) return
 
-    const { userSubmitted, correct, puzzle, puzzleFormatted } = data.checkSudoku
+    const { userSubmitted, correct, puzzle, puzzleFormatted, hints } = data.checkSudoku
 
     if (userSubmitted) {
       const category = 'Game'
@@ -83,7 +89,7 @@ const Play = ({ showSolution, setShowSolution }) => {
     }
 
     if (userSubmitted && correct) {
-      updateGameToStorage(gameId, puzzle, puzzleFormatted)
+      updateGameToStorage(gameId, puzzle, puzzleFormatted, hints)
       setGame(returnGameFromStorage(gameId))
     }
   }, [gameId, data, setGame])

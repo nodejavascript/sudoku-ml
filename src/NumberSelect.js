@@ -23,7 +23,7 @@ const NumberSelect = () => {
       memoryButtonSelected(display)
     }
   }
-  
+
   return (
     <Row
       size='small'
