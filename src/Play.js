@@ -152,7 +152,12 @@ const Play = ({ showSolution, setShowSolution }) => {
 
         <NumberSelect />
 
-        <Board key={`game_${gameId}`} gameId={gameId} rows={puzzleFormatted} heightOffset={15} cellClick={cellClick} />
+        <Board
+          key={`game_${gameId}`}
+          gameId={gameId}
+          rows={puzzleFormatted}
+          cellClick={cellClick}
+        />
 
       </Space>
 

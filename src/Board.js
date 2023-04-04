@@ -2,11 +2,14 @@ import React from 'react'
 import { useReactiveVar } from '@apollo/client'
 
 import { memoryButtonSelected } from './lib'
+import { returnGameFromStorage } from './logic'
 
 import { Row, Col } from 'antd'
 import { blue, purple } from '@ant-design/colors'
 
-const Board = ({ gameId, rows, heightOffset = 0, cellClick }) => {
+const Board = ({ gameId, rows, cellClick }) => {
+  const { originalPuzzleFormatted } = returnGameFromStorage(gameId)
+
   const buttonSelected = useReactiveVar(memoryButtonSelected)
 
   return rows.map((row, rowIndex) => {
@@ -20,18 +23,22 @@ const Board = ({ gameId, rows, heightOffset = 0, cellClick }) => {
           row.map((cell, cellIndex) => {
             const { key: cellKey, display, square } = cell
 
-            const colorArray = square % 2 ? blue : purple
+            const isPuzzle = Boolean(cellClick)
+
+            const key = `${gameId}_${isPuzzle ? 'puzzle' : 'solution'}_${cellKey}`
 
             const marginBottom = [2, 5].includes(rowIndex) ? 6 : 1
             const marginRight = [2, 5].includes(cellIndex) ? 6 : 1
 
             const isAnswered = display !== null
-            const isPuzzle = Boolean(cellClick)
             const isClickable = isPuzzle && !isAnswered
 
-            const cursor = isClickable && 'pointer'
+            const isOriginal = Boolean(originalPuzzleFormatted[rowIndex].find(i => i.key === cellKey).display !== null)
 
-            const backgroundColor = isAnswered && colorArray[1]
+            const colorArray = square % 2 ? blue : purple
+            const backgroundColor = isAnswered && colorArray[isOriginal ? 3 : 2]
+
+            const cursor = isClickable && 'pointer'
 
             const style = {
               padding: 6,
@@ -45,8 +52,6 @@ const Board = ({ gameId, rows, heightOffset = 0, cellClick }) => {
               backgroundColor,
               cursor
             }
-
-            const key = `${gameId}_${isPuzzle ? 'puzzle' : 'solution'}_${cellKey}`
 
             return (
               <Col

@@ -62,11 +62,13 @@ const NewGameButton = () => {
     })
 
     const { newSudoku } = data
+    const { puzzleFormatted: originalPuzzleFormatted } = newSudoku
 
     const newGame = {
       gameId,
       createdAt,
-      ...newSudoku
+      ...newSudoku,
+      originalPuzzleFormatted
     }
 
     addGameToStorage(newGame)
