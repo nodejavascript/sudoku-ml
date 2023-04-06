@@ -6,7 +6,7 @@ import ReactGA from 'react-ga4'
 import { memoryCurrentGame } from './lib'
 import { addGameToStorage } from './logic'
 
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { PlusCircleOutlined } from '@ant-design/icons'
 
 const MUTATION_NEW_SUDOKU = gql`
@@ -48,7 +48,7 @@ const NewGameButton = () => {
   const [mutationNewSudoku, { error, data }] = useMutation(MUTATION_NEW_SUDOKU)
 
   useEffect(() => {
-    if (error) console.error('mutationNewSudoku', error)
+    if (error) message.error(error?.message)
   }, [error])
 
   useEffect(() => {

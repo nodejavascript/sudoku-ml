@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { gql, useMutation, useReactiveVar } from '@apollo/client'
 import ReactGA from 'react-ga4'
 
-import { memoryCurrentGame } from './lib'
+import { memoryCurrentGame, memoryShowHints } from './lib'
 import { updateGameToStorage, returnGameFromStorage, returnGameProgress } from './logic'
 
 import Board from './Board'
@@ -11,7 +11,7 @@ import ShowSolutionButton from './ShowSolutionButton'
 
 import { blue, purple } from '@ant-design/colors'
 
-import { Row, Col, Progress, message, Typography, Space, Card } from 'antd'
+import { Row, Col, Progress, message, Typography, Space, Card, Checkbox } from 'antd'
 
 const { Title } = Typography
 
@@ -43,6 +43,7 @@ const MUTATION_CHECK_SUDOKU = gql`
 
 const Play = ({ showSolution, setShowSolution }) => {
   const gameId = useReactiveVar(memoryCurrentGame)
+
   const [mutationCheckSudoku, { error, data }] = useMutation(MUTATION_CHECK_SUDOKU)
 
   const [game, setGame] = useState()
@@ -95,7 +96,7 @@ const Play = ({ showSolution, setShowSolution }) => {
   }, [gameId, data, setGame])
 
   useEffect(() => {
-    if (error) console.log('mutationCheckSudoku', error)
+    if (error) message.error(error?.message)
   }, [error])
 
   if (!game) return null
@@ -121,6 +122,8 @@ const Play = ({ showSolution, setShowSolution }) => {
     })
   }
 
+  const handleShowHints = () => memoryShowHints(!memoryShowHints())
+
   const { puzzleFormatted } = game
   const { percent, progressType } = returnGameProgress(game)
 
@@ -139,7 +142,7 @@ const Play = ({ showSolution, setShowSolution }) => {
           </Col>
         </Row>
       )}
-      style={{ padding: 0, margin: 0 }}
+      style={{ padding: 0, margin: 0, textAlign: 'center' }}
     >
 
       <Space
@@ -164,6 +167,8 @@ const Play = ({ showSolution, setShowSolution }) => {
           rows={puzzleFormatted}
           cellClick={cellClick}
         />
+
+        <Checkbox onClick={handleShowHints}>Show Hints?</Checkbox>
 
       </Space>
 

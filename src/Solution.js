@@ -8,8 +8,7 @@ import { returnGameFromStorage } from './logic'
 
 import Board from './Board'
 
-import { Card, Modal } from 'antd'
-import Expand from 'react-expand-animated'
+import { Modal } from 'antd'
 
 const Solution = ({ showSolution, setShowSolution }) => {
   const gameId = useReactiveVar(memoryCurrentGame)
@@ -24,7 +23,7 @@ const Solution = ({ showSolution, setShowSolution }) => {
       action,
       label
     })
-  }, [showSolution])
+  }, [showSolution, gameId])
 
   if (!gameId) return null
 

@@ -1,13 +1,15 @@
 import React from 'react'
 import { useReactiveVar } from '@apollo/client'
 
-import { memoryButtonSelected } from './lib'
+import { memoryButtonSelected, memoryShowHints } from './lib'
 import { returnGameFromStorage } from './logic'
 
 import { Row, Col } from 'antd'
 import { blue, purple, grey } from '@ant-design/colors'
 
 const Board = ({ gameId, rows, cellClick }) => {
+  const showHints = useReactiveVar(memoryShowHints)
+
   const { originalPuzzleFormatted, hints } = returnGameFromStorage(gameId)
 
   const buttonSelected = useReactiveVar(memoryButtonSelected)
@@ -39,18 +41,10 @@ const Board = ({ gameId, rows, cellClick }) => {
 
             let backgroundColor = isAnswered && colorArray[isOriginal ? 3 : 2]
 
-            if (isPuzzle && !backgroundColor && buttonSelected) {
+            if (showHints && isPuzzle && !backgroundColor && buttonSelected) {
               const { rows: matchRows, columns: matchColumns, squares: matchSquares } = hints.find(i => i.display === buttonSelected)
 
               const cellFound = Boolean(matchRows.find(i => i === cell.row) || matchColumns.find(i => i === cell.column) || matchSquares.find(i => i === cell.square))
-
-              console.log('\n')
-              console.log('buttonSelected', buttonSelected)
-              console.log('cell.row', cell.row)
-              console.log('cell.column', cell.column)
-              console.log('matchRows', matchRows)
-              console.log('matchColumns', matchColumns)
-              console.log('cellFound', cellFound)
 
               backgroundColor = cellFound && grey[0]
             }
