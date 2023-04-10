@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactGA from 'react-ga4'
 
+import SiteWrapper from './layout/SiteWrapper'
 import GraphqlClient from './GraphqlClient'
 import Home from './Home'
 import './App.css'
@@ -13,7 +14,9 @@ const App = () => {
   return (
     <GraphqlClient>
 
-      <Home />
+      <SiteWrapper>
+        <Home />
+      </SiteWrapper>
 
     </GraphqlClient>
   )
